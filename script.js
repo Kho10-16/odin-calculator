@@ -17,6 +17,7 @@ function divide(a, b){
 let firstNumber = '';
 let operator = '';
 let secondNumber = '';
+let justCalculated = false;
 
 function operate(operator, a, b){
     a = Number(a);
@@ -43,14 +44,23 @@ function updateDisplay(value){
     display.textContent = value;
 }
 
-function appendDigit(digit){
-    if(operator === ''){
-        firstNumber += digit;
-        updateDisplay(firstNumber);
-    } else {
-        secondNumber += digit;
-        updateDisplay(secondNumber);
-    }
+function addDigitTo(current, digit) {
+  return current === '0' ? digit : current + digit;
+}
+
+function appendDigit(digit) {
+  if (justCalculated) {
+    firstNumber = '';
+    justCalculated = false;
+  }
+
+  if (operator === '') {
+    firstNumber = addDigitTo(firstNumber, digit);
+    updateDisplay(firstNumber);
+  } else {
+    secondNumber = addDigitTo(secondNumber, digit);
+    updateDisplay(secondNumber);
+  }
 }
 
 digitButtons.forEach(button => {
@@ -65,11 +75,20 @@ const operatorButtons = document.querySelectorAll('.operator');
 const equalsButton = document.querySelector('#equals');
 
 function calculate() {
-    const result = operate(operator, firstNumber, secondNumber);
-    firstNumber = String(result);
-    operator = '';
-    secondNumber = '';
-    updateDisplay(firstNumber);
+  if (operator === '/' && Number(secondNumber) === 0) {
+    clearAll();
+    updateDisplay('Nice try 😏');
+    return;
+  }
+
+  let result = operate(operator, firstNumber, secondNumber);
+  result = Math.round(result * 100000000) / 100000000;
+
+  firstNumber = String(result);
+  operator = '';
+  secondNumber = '';
+  justCalculated = true;
+  updateDisplay(firstNumber);
 }
 
 function chooseOperator(newOperator) {
@@ -79,6 +98,7 @@ function chooseOperator(newOperator) {
         calculate();
     }
     operator = newOperator;
+    justCalculated = false;
 }
 
 operatorButtons.forEach(button => {
@@ -92,3 +112,15 @@ equalsButton.addEventListener('click', () => {
         calculate();
     }
 });
+
+const clearButton = document.querySelector('#clear');
+
+function clearAll() {
+  firstNumber = '';
+  operator = '';
+  secondNumber = '';
+  justCalculated = false;
+  updateDisplay('0');
+}
+
+clearButton.addEventListener('click', clearAll);
