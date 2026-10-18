@@ -124,3 +124,39 @@ function clearAll() {
 }
 
 clearButton.addEventListener('click', clearAll);
+
+const decimalButton = document.querySelector('#decimal');
+const backspaceButton = document.querySelector('#backspace');
+
+function appendDecimal() {
+  if (justCalculated) {
+    firstNumber = '';
+    justCalculated = false;
+  }
+
+  if (operator === '') {
+    if (firstNumber.includes('.')) return;
+    firstNumber = firstNumber === '' ? '0.' : firstNumber + '.';
+    updateDisplay(firstNumber);
+  } else {
+    if (secondNumber.includes('.')) return;
+    secondNumber = secondNumber === '' ? '0.' : secondNumber + '.';
+    updateDisplay(secondNumber);
+  }
+}
+
+function backspace() {
+  if (justCalculated) return;
+
+  if (operator === '') {
+    firstNumber = firstNumber.slice(0, -1);
+    updateDisplay(firstNumber || '0');
+  } else {
+    if (secondNumber === '') return;
+    secondNumber = secondNumber.slice(0, -1);
+    updateDisplay(secondNumber || '0');
+  }
+}
+
+decimalButton.addEventListener('click', appendDecimal);
+backspaceButton.addEventListener('click', backspace);
