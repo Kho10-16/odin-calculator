@@ -60,3 +60,35 @@ digitButtons.forEach(button => {
 });
 
 updateDisplay('0');
+
+const operatorButtons = document.querySelectorAll('.operator');
+const equalsButton = document.querySelector('#equals');
+
+function calculate() {
+    const result = operate(operator, firstNumber, secondNumber);
+    firstNumber = String(result);
+    operator = '';
+    secondNumber = '';
+    updateDisplay(firstNumber);
+}
+
+function chooseOperator(newOperator) {
+    if (firstNumber === '') return; // Do nothing if no first number
+
+    if (secondNumber !== '') {
+        calculate();
+    }
+    operator = newOperator;
+}
+
+operatorButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        chooseOperator(button.dataset.operator);
+    });
+});
+
+equalsButton.addEventListener('click', () => {
+    if (firstNumber !== '' && operator !== '' && secondNumber !== '') {
+        calculate();
+    }
+});
