@@ -107,11 +107,12 @@ operatorButtons.forEach(button => {
     });
 });
 
-equalsButton.addEventListener('click', () => {
-    if (firstNumber !== '' && operator !== '' && secondNumber !== '') {
-        calculate();
-    }
-});
+function pressEquals() {
+  if (firstNumber === '' || operator === '' || secondNumber === '') return;
+  calculate();
+}
+
+equalsButton.addEventListener('click', pressEquals);
 
 const clearButton = document.querySelector('#clear');
 
@@ -160,3 +161,23 @@ function backspace() {
 
 decimalButton.addEventListener('click', appendDecimal);
 backspaceButton.addEventListener('click', backspace);
+
+document.addEventListener('keydown', (event) => {
+  const key = event.key;
+
+  if (key.length === 1 && key >= '0' && key <= '9') {
+    appendDigit(key);
+  } else if (key === '.') {
+    appendDecimal();
+  } else if (['+', '-', '*', '/'].includes(key)) {
+    event.preventDefault();
+    chooseOperator(key);
+  } else if (key === 'Enter' || key === '=') {
+    event.preventDefault();
+    pressEquals();
+  } else if (key === 'Backspace') {
+    backspace();
+  } else if (key === 'Escape') {
+    clearAll();
+  }
+});
