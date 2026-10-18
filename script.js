@@ -35,3 +35,28 @@ function operate(operator, a, b){
             return null;
     }
 }
+
+const display = document.querySelector('.display');
+const digitButtons = document.querySelectorAll('.digit');
+
+function updateDisplay(value){
+    display.textContent = value;
+}
+
+function appendDigit(digit){
+    if(operator === ''){
+        firstNumber += digit;
+        updateDisplay(firstNumber);
+    } else {
+        secondNumber += digit;
+        updateDisplay(secondNumber);
+    }
+}
+
+digitButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        appendDigit(button.textContent);
+    });
+});
+
+updateDisplay('0');
